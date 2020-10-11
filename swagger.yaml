@@ -1,718 +1,576 @@
----
-swagger: "2.0"
-info:
-  description: "This is a sample server Petstore server.  You can find out more about\
-    \ Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).\
-    \  For this sample, you can use the api key `special-key` to test the authorization\
-    \ filters."
-  version: "1.0.5"
-  title: "Swagger Petstore"
-  termsOfService: "http://swagger.io/terms/"
-  contact:
-    email: "apiteam@swagger.io"
-  license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-host: "petstore.swagger.io"
-basePath: "/v2"
-tags:
-- name: "pet"
-  description: "Everything about your Pets"
-  externalDocs:
-    description: "Find out more"
-    url: "http://swagger.io"
-- name: "store"
-  description: "Access to Petstore orders"
-- name: "user"
-  description: "Operations about user"
-  externalDocs:
-    description: "Find out more about our store"
-    url: "http://swagger.io"
-schemes:
-- "https"
-- "http"
-paths:
-  /pet/{petId}/uploadImage:
-    post:
-      tags:
-      - "pet"
-      summary: "uploads an image"
-      description: ""
-      operationId: "uploadFile"
-      consumes:
-      - "multipart/form-data"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to update"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "additionalMetadata"
-        in: "formData"
-        description: "Additional data to pass to server"
-        required: false
-        type: "string"
-      - name: "file"
-        in: "formData"
-        description: "file to upload"
-        required: false
-        type: "file"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/ApiResponse"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet:
-    post:
-      tags:
-      - "pet"
-      summary: "Add a new pet to the store"
-      description: ""
-      operationId: "addPet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Pet"
-      responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-    put:
-      tags:
-      - "pet"
-      summary: "Update an existing pet"
-      description: ""
-      operationId: "updatePet"
-      consumes:
-      - "application/json"
-      - "application/xml"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Pet"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-        405:
-          description: "Validation exception"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByStatus:
-    get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by status"
-      description: "Multiple status values can be provided with comma separated strings"
-      operationId: "findPetsByStatus"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "status"
-        in: "query"
-        description: "Status values that need to be considered for filter"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-          enum:
-          - "available"
-          - "pending"
-          - "sold"
-          default: "available"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid status value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /pet/findByTags:
-    get:
-      tags:
-      - "pet"
-      summary: "Finds Pets by tags"
-      description: "Multiple tags can be provided with comma separated strings. Use\
-        \ tag1, tag2, tag3 for testing."
-      operationId: "findPetsByTags"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "tags"
-        in: "query"
-        description: "Tags to filter by"
-        required: true
-        type: "array"
-        items:
-          type: "string"
-        collectionFormat: "multi"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid tag value"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-      deprecated: true
-  /pet/{petId}:
-    get:
-      tags:
-      - "pet"
-      summary: "Find pet by ID"
-      description: "Returns a single pet"
-      operationId: "getPetById"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet to return"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Pet"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - api_key: []
-    post:
-      tags:
-      - "pet"
-      summary: "Updates a pet in the store with form data"
-      description: ""
-      operationId: "updatePetWithForm"
-      consumes:
-      - "application/x-www-form-urlencoded"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "petId"
-        in: "path"
-        description: "ID of pet that needs to be updated"
-        required: true
-        type: "integer"
-        format: "int64"
-      - name: "name"
-        in: "formData"
-        description: "Updated name of the pet"
-        required: false
-        type: "string"
-      - name: "status"
-        in: "formData"
-        description: "Updated status of the pet"
-        required: false
-        type: "string"
-      responses:
-        405:
-          description: "Invalid input"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-    delete:
-      tags:
-      - "pet"
-      summary: "Deletes a pet"
-      description: ""
-      operationId: "deletePet"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "api_key"
-        in: "header"
-        required: false
-        type: "string"
-      - name: "petId"
-        in: "path"
-        description: "Pet id to delete"
-        required: true
-        type: "integer"
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Pet not found"
-      security:
-      - petstore_auth:
-        - "write:pets"
-        - "read:pets"
-  /store/order:
-    post:
-      tags:
-      - "store"
-      summary: "Place an order for a pet"
-      description: ""
-      operationId: "placeOrder"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "order placed for purchasing the pet"
-        required: true
-        schema:
-          $ref: "#/definitions/Order"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid Order"
-  /store/order/{orderId}:
-    get:
-      tags:
-      - "store"
-      summary: "Find purchase order by ID"
-      description: "For valid response try integer IDs with value >= 1 and <= 10.\
-        \ Other values will generated exceptions"
-      operationId: "getOrderById"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of pet that needs to be fetched"
-        required: true
-        type: "integer"
-        maximum: 10
-        minimum: 1
-        format: "int64"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/Order"
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-    delete:
-      tags:
-      - "store"
-      summary: "Delete purchase order by ID"
-      description: "For valid response try integer IDs with positive integer value.\
-        \ Negative or non-integer values will generate API errors"
-      operationId: "deleteOrder"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "orderId"
-        in: "path"
-        description: "ID of the order that needs to be deleted"
-        required: true
-        type: "integer"
-        minimum: 1
-        format: "int64"
-      responses:
-        400:
-          description: "Invalid ID supplied"
-        404:
-          description: "Order not found"
-  /store/inventory:
-    get:
-      tags:
-      - "store"
-      summary: "Returns pet inventories by status"
-      description: "Returns a map of status codes to quantities"
-      operationId: "getInventory"
-      produces:
-      - "application/json"
-      parameters: []
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            type: "object"
-            additionalProperties:
-              type: "integer"
-              format: "int32"
-      security:
-      - api_key: []
-  /user/createWithArray:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithArrayInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/createWithList:
-    post:
-      tags:
-      - "user"
-      summary: "Creates list of users with given input array"
-      description: ""
-      operationId: "createUsersWithListInput"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "List of user object"
-        required: true
-        schema:
-          type: "array"
-          items:
-            $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-  /user/{username}:
-    get:
-      tags:
-      - "user"
-      summary: "Get user by user name"
-      description: ""
-      operationId: "getUserByName"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be fetched. Use user1 for testing. "
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          schema:
-            $ref: "#/definitions/User"
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-    put:
-      tags:
-      - "user"
-      summary: "Updated user"
-      description: "This can only be done by the logged in user."
-      operationId: "updateUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "name that need to be updated"
-        required: true
-        type: "string"
-      - in: "body"
-        name: "body"
-        description: "Updated user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        400:
-          description: "Invalid user supplied"
-        404:
-          description: "User not found"
-    delete:
-      tags:
-      - "user"
-      summary: "Delete user"
-      description: "This can only be done by the logged in user."
-      operationId: "deleteUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "path"
-        description: "The name that needs to be deleted"
-        required: true
-        type: "string"
-      responses:
-        400:
-          description: "Invalid username supplied"
-        404:
-          description: "User not found"
-  /user/login:
-    get:
-      tags:
-      - "user"
-      summary: "Logs user into the system"
-      description: ""
-      operationId: "loginUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - name: "username"
-        in: "query"
-        description: "The user name for login"
-        required: true
-        type: "string"
-      - name: "password"
-        in: "query"
-        description: "The password for login in clear text"
-        required: true
-        type: "string"
-      responses:
-        200:
-          description: "successful operation"
-          headers:
-            X-Expires-After:
-              type: "string"
-              format: "date-time"
-              description: "date in UTC when token expires"
-            X-Rate-Limit:
-              type: "integer"
-              format: "int32"
-              description: "calls per hour allowed by the user"
-          schema:
-            type: "string"
-        400:
-          description: "Invalid username/password supplied"
-  /user/logout:
-    get:
-      tags:
-      - "user"
-      summary: "Logs out current logged in user session"
-      description: ""
-      operationId: "logoutUser"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters: []
-      responses:
-        default:
-          description: "successful operation"
-  /user:
-    post:
-      tags:
-      - "user"
-      summary: "Create user"
-      description: "This can only be done by the logged in user."
-      operationId: "createUser"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      - "application/xml"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "Created user object"
-        required: true
-        schema:
-          $ref: "#/definitions/User"
-      responses:
-        default:
-          description: "successful operation"
-securityDefinitions:
-  api_key:
-    type: "apiKey"
-    name: "api_key"
-    in: "header"
-  petstore_auth:
-    type: "oauth2"
-    authorizationUrl: "https://petstore.swagger.io/oauth/authorize"
-    flow: "implicit"
-    scopes:
-      read:pets: "read your pets"
-      write:pets: "modify pets in your account"
-definitions:
-  ApiResponse:
-    type: "object"
-    properties:
-      code:
-        type: "integer"
-        format: "int32"
-      type:
-        type: "string"
-      message:
-        type: "string"
-  Category:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Category"
-  Pet:
-    type: "object"
-    required:
-    - "name"
-    - "photoUrls"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      category:
-        $ref: "#/definitions/Category"
-      name:
-        type: "string"
-        example: "doggie"
-      photoUrls:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          type: "string"
-          xml:
-            name: "photoUrl"
-      tags:
-        type: "array"
-        xml:
-          wrapped: true
-        items:
-          xml:
-            name: "tag"
-          $ref: "#/definitions/Tag"
-      status:
-        type: "string"
-        description: "pet status in the store"
-        enum:
-        - "available"
-        - "pending"
-        - "sold"
-    xml:
-      name: "Pet"
-  Tag:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      name:
-        type: "string"
-    xml:
-      name: "Tag"
-  Order:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      petId:
-        type: "integer"
-        format: "int64"
-      quantity:
-        type: "integer"
-        format: "int32"
-      shipDate:
-        type: "string"
-        format: "date-time"
-      status:
-        type: "string"
-        description: "Order Status"
-        enum:
-        - "placed"
-        - "approved"
-        - "delivered"
-      complete:
-        type: "boolean"
-    xml:
-      name: "Order"
-  User:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-        format: "int64"
-      username:
-        type: "string"
-      firstName:
-        type: "string"
-      lastName:
-        type: "string"
-      email:
-        type: "string"
-      password:
-        type: "string"
-      phone:
-        type: "string"
-      userStatus:
-        type: "integer"
-        format: "int32"
-        description: "User Status"
-    xml:
-      name: "User"
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Divideite backend APIs",
+    "version": "1.0",
+    "description": "Different APIs for the Divideite backend processes.",
+    "x-logo": {
+      "url": ""
+    },
+    "license": null,
+    "contact": null
+  },
+  "servers": [
+    {
+      "url": "https://api.example.io"
+    }
+  ],
+  "paths": {
+    "/dvp/onboard/check": {
+      "summary": "Check if a user name is available for a  a new User in onboarding process",
+      "description": "During signup, the user will provide a login user name. This has to be verified that its possible to pick that user id for registration. We will not allow multiple user names. The service can be used to check the user name as well as email address. ",
+      "get": {
+        "tags": [],
+        "parameters": [
+          {
+            "deprecated": false,
+            "example": "un=iamastudent",
+            "name": "un",
+            "description": "Add this parameter for checking the user name exists or not.",
+            "in": "query",
+            "required": false,
+            "allowEmptyValue": true,
+            "x-last-modified": 1602426437660
+          },
+          {
+            "deprecated": false,
+            "example": "em=myname@gmail.com",
+            "name": "em",
+            "description": "\tCheck if an email exists on the platform",
+            "in": "query",
+            "required": false,
+            "allowEmptyValue": false,
+            "x-last-modified": 1602426484683
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "v_type",
+                    " v_result"
+                  ],
+                  "enum": [],
+                  "type": "object",
+                  "properties": {
+                    "v_type": {
+                      "0": "E",
+                      "1": "M",
+                      "2": "A",
+                      "3": "I",
+                      "4": "L"
+                    },
+                    "v_result": {}
+                  },
+                  "example": {
+                    "v_type": "EMAIL",
+                    "v_result": true
+                  }
+                },
+                "example": {
+                  "v_type": "EMAIL",
+                  "v_result": true
+                },
+                "type": "object",
+                "format": "check_for",
+                "pattern": "",
+                "enum": [],
+                "required": [
+                  "v_type",
+                  " v_result"
+                ],
+                "properties": {
+                  "v_type": "EMAIL",
+                  "v_result": true
+                }
+              }
+            },
+            "description": "Successful verification of the email or user name. Other case the service is down. ",
+            "type": "",
+            "x-last-modified": 1602426771993
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [],
+                  "enum": [],
+                  "type": "object",
+                  "example": {
+                    "error": "Denied Access"
+                  }
+                },
+                "example": {
+                  "error": "Denied Access"
+                },
+                "type": "object",
+                "enum": [],
+                "required": [],
+                "properties": {}
+              }
+            },
+            "description": "",
+            "type": "",
+            "x-last-modified": 1602426842703
+          }
+        },
+        "operationId": "dvp_onboard_check",
+        "summary": "Check for already registered users"
+      },
+      "x-last-modified": 1602426230975
+    },
+    "/dvp/onboard/an_set": {
+      "summary": "Set an anonymous session for the signup process",
+      "description": "Request to start an anonymous session for the signup process. ",
+      "post": {
+        "tags": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [],
+                  "enum": [],
+                  "type": "object",
+                  "properties": {
+                    "session": {}
+                  },
+                  "example": {
+                    "session": true
+                  }
+                },
+                "example": {
+                  "session": true
+                },
+                "type": "object",
+                "enum": [],
+                "required": [],
+                "properties": {
+                  "session": true
+                }
+              }
+            },
+            "description": "Successfully started a session",
+            "type": "",
+            "x-last-modified": 1602427149317
+          }
+        },
+        "operationId": "set_anonymous_session",
+        "summary": "Request for an anonymous session"
+      },
+      "x-last-modified": 1602426949698
+    },
+    "/dvp/onboard/new": {
+      "summary": "Create a new user in the platform",
+      "description": "Start the process for adding the new user in the platform. ",
+      "post": {
+        "tags": [],
+        "operationId": "add_new_user",
+        "summary": "Add a new user to the platform",
+        "description": "{\n    \"adr\": \"ssssss\",\n    \"bd\": \"443434343\",\n    \"em\": \"kris@gmail.com\",\n    \"fn\": \"Krish\",\n    \"lid\": \"kris\",\n    \"ln\": \"K\",\n    \"pwd\": \"abcd\"\n}",
+        "requestBody": {
+          "required": true,
+          "description": "Submit details needed for singup; ",
+          "content": {
+            "application/json": {
+              "encoding": "",
+              "schema": {
+                "example": {
+                  "adr": "ssssss",
+                  "bd": "443434343",
+                  "em": "kris@gmail.com",
+                  "fn": "Krish",
+                  "lid": "kris",
+                  "ln": "K",
+                  "pwd": "abcd"
+                },
+                "type": "object",
+                "enum": [],
+                "required": [],
+                "properties": {
+                  "adr": "ssssss",
+                  "bd": "443434343",
+                  "em": "kris@gmail.com",
+                  "fn": "Krish",
+                  "lid": "kris",
+                  "ln": "K",
+                  "pwd": "abcd"
+                }
+              },
+              "example": {
+                "adr": "ssssss",
+                "bd": "443434343",
+                "em": "kris@gmail.com",
+                "fn": "Krish",
+                "lid": "kris",
+                "ln": "K",
+                "pwd": "abcd"
+              },
+              "type": "object",
+              "enum": [],
+              "required": [],
+              "properties": {
+                "adr": "ssssss",
+                "bd": "443434343",
+                "em": "kris@gmail.com",
+                "fn": "Krish",
+                "lid": "kris",
+                "ln": "K",
+                "pwd": "abcd"
+              }
+            }
+          }
+        }
+      },
+      "x-last-modified": 1602427500463
+    },
+    "/dvp/signin/b": {
+      "summary": "Do a login process with credentials",
+      "description": "\tDo a login process with normal password authentication",
+      "post": {
+        "tags": [],
+        "operationId": "user_login",
+        "summary": "Login a new user",
+        "responses": {
+          "200": {
+            "type": "",
+            "description": "Successfull login",
+            "content": {
+              "application/json": {
+                "encoding": "",
+                "schema": {
+                  "example": {
+                    "llt": 77855454545,
+                    "nm": "Bob",
+                    "img": "http:// ....",
+                    "rol": "Expert"
+                  },
+                  "type": "object",
+                  "enum": [],
+                  "required": [],
+                  "properties": {
+                    "llt": 77855454545,
+                    "nm": "Bob",
+                    "img": "http:// ....",
+                    "rol": "Expert"
+                  }
+                },
+                "example": {
+                  "llt": 77855454545,
+                  "nm": "Bob",
+                  "img": "http:// ....",
+                  "rol": "Expert"
+                },
+                "type": "object",
+                "enum": [],
+                "required": [],
+                "properties": {
+                  "llt": 77855454545,
+                  "nm": "Bob",
+                  "img": "http:// ....",
+                  "rol": "Expert"
+                }
+              }
+            },
+            "x-last-modified": 1602427884525
+          },
+          "401": {
+            "type": "",
+            "description": "not authenticated",
+            "content": {
+              "application/json": {
+                "encoding": "",
+                "schema": {
+                  "example": {
+                    "error": "Invalid Username or Password"
+                  },
+                  "type": "object",
+                  "enum": [],
+                  "required": [],
+                  "properties": {
+                    "error": "Invalid Username or Password"
+                  }
+                },
+                "example": {
+                  "error": "Invalid Username or Password"
+                },
+                "type": "object",
+                "enum": [],
+                "required": [],
+                "properties": {
+                  "error": "Invalid Username or Password"
+                }
+              }
+            },
+            "x-last-modified": 1602427935010
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "description": "Login parameters",
+          "content": {
+            "application/json": {
+              "encoding": "",
+              "schema": {
+                "example": {
+                  "un": "bobmarley",
+                  "ln_sec": "password_hash"
+                },
+                "type": "object",
+                "enum": [],
+                "required": [],
+                "properties": {
+                  "un": "bobmarley",
+                  "ln_sec": "password_hash"
+                }
+              },
+              "example": {
+                "un": "bobmarley",
+                "ln_sec": "password_hash"
+              },
+              "type": "object",
+              "enum": [],
+              "required": [],
+              "properties": {
+                "un": "bobmarley",
+                "ln_sec": "password_hash"
+              }
+            }
+          }
+        }
+      },
+      "x-last-modified": 1602427736134
+    },
+    "/dxp/summary": {
+      "summary": "Get a list of concepts to be displayed for expert dashboard",
+      "description": "Get a summary of available concepts , parts etc.",
+      "get": {
+        "tags": [],
+        "operationId": "get_expert_summary",
+        "responses": {
+          "200": {
+            "type": "",
+            "description": "",
+            "content": {
+              "application/json": {
+                "encoding": "",
+                "schema": {
+                  "example": {
+                    "ns": {
+                      "sub": 3,
+                      "part": 15,
+                      "b_c": 10,
+                      "i_c": 20
+                    }
+                  },
+                  "type": "object",
+                  "enum": [],
+                  "required": [],
+                  "properties": {
+                    "ns": {
+                      "sub": 3,
+                      "part": 15,
+                      "b_c": 10,
+                      "i_c": 20
+                    }
+                  }
+                },
+                "example": {
+                  "ns": {
+                    "sub": 3,
+                    "part": 15,
+                    "b_c": 10,
+                    "i_c": 20
+                  }
+                },
+                "type": "object",
+                "enum": [],
+                "required": [],
+                "properties": {
+                  "ns": {
+                    "sub": 3,
+                    "part": 15,
+                    "b_c": 10,
+                    "i_c": 20
+                  }
+                }
+              }
+            },
+            "x-last-modified": 1602428325098
+          }
+        }
+      },
+      "x-last-modified": 1602428149114
+    },
+    "/dxp/concept/recent": {
+      "description": "Get the list of concepts to show in dashboard",
+      "get": {
+        "tags": [],
+        "operationId": "get_recent_concepts",
+        "summary": "Get a list of concepts defined by the expert. max of 10",
+        "responses": {
+          "200": {
+            "type": "",
+            "description": "List of concepts to be shown",
+            "content": {
+              "application/json": {
+                "encoding": "",
+                "schema": {
+                  "example": [
+                    {
+                      "name": "Sample Concept",
+                      "id": "BC_76679899",
+                      "created_on": 167654665464,
+                      "modified_on": 1365646564,
+                      "total_available": 5,
+                      "impls": [
+                        {
+                          "ic_name": "impl_1",
+                          "id_id": "IC_76679899_1"
+                        },
+                        {}
+                      ]
+                    },
+                    {
+                      "name": "Sample Concept 2",
+                      "id": "BC_76679898",
+                      "created_on": 167654665464,
+                      "modified_on": 1365646564,
+                      "total_available": 8,
+                      "impls": [
+                        {
+                          "ic_name": "impl_1",
+                          "id_id": "IC_76679898_1"
+                        },
+                        {}
+                      ]
+                    }
+                  ],
+                  "type": "object",
+                  "enum": [],
+                  "required": [],
+                  "properties": [
+                    {
+                      "name": "Sample Concept",
+                      "id": "BC_76679899",
+                      "created_on": 167654665464,
+                      "modified_on": 1365646564,
+                      "total_available": 5,
+                      "impls": [
+                        {
+                          "ic_name": "impl_1",
+                          "id_id": "IC_76679899_1"
+                        },
+                        {}
+                      ]
+                    },
+                    {
+                      "name": "Sample Concept 2",
+                      "id": "BC_76679898",
+                      "created_on": 167654665464,
+                      "modified_on": 1365646564,
+                      "total_available": 8,
+                      "impls": [
+                        {
+                          "ic_name": "impl_1",
+                          "id_id": "IC_76679898_1"
+                        },
+                        {}
+                      ]
+                    }
+                  ]
+                },
+                "example": [
+                  {
+                    "name": "Sample Concept",
+                    "id": "BC_76679899",
+                    "created_on": 167654665464,
+                    "modified_on": 1365646564,
+                    "total_available": 5,
+                    "impls": [
+                      {
+                        "ic_name": "impl_1",
+                        "id_id": "IC_76679899_1"
+                      },
+                      {}
+                    ]
+                  },
+                  {
+                    "name": "Sample Concept 2",
+                    "id": "BC_76679898",
+                    "created_on": 167654665464,
+                    "modified_on": 1365646564,
+                    "total_available": 8,
+                    "impls": [
+                      {
+                        "ic_name": "impl_1",
+                        "id_id": "IC_76679898_1"
+                      },
+                      {}
+                    ]
+                  }
+                ],
+                "type": "object",
+                "enum": [],
+                "required": [],
+                "properties": [
+                  {
+                    "name": "Sample Concept",
+                    "id": "BC_76679899",
+                    "created_on": 167654665464,
+                    "modified_on": 1365646564,
+                    "total_available": 5,
+                    "impls": [
+                      {
+                        "ic_name": "impl_1",
+                        "id_id": "IC_76679899_1"
+                      },
+                      {}
+                    ]
+                  },
+                  {
+                    "name": "Sample Concept 2",
+                    "id": "BC_76679898",
+                    "created_on": 167654665464,
+                    "modified_on": 1365646564,
+                    "total_available": 8,
+                    "impls": [
+                      {
+                        "ic_name": "impl_1",
+                        "id_id": "IC_76679898_1"
+                      },
+                      {}
+                    ]
+                  }
+                ]
+              }
+            },
+            "x-last-modified": 1602428894001
+          }
+        }
+      },
+      "x-last-modified": 1602428477498
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "JWTAuth": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "description": "Example: \n> Authorization: Bearer <token>",
+        "name": "JWT",
+        "in": "header",
+        "x-last-modified": 1602426052166
+      }
+    },
+    "schemas": {},
+    "responses": {},
+    "parameters": {}
+  },
+  "tags": [],
+  "security": [],
+  "externalDocs": null
+}
