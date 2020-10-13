@@ -178,11 +178,4 @@ components:
           description: ""
           example: "+177789225547"
       description: ""
-  extensions:
-    x-apitive-documentation:
-    - id: 712
-      title: "Divideite"
-      url: ""
-      content: "Divideite API "
-      visibility: true
-      type: "General"
+ 
