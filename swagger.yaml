@@ -1,576 +1,189 @@
-{
-  "openapi": "3.0.3",
-  "info": {
-    "title": "Divideite backend APIs",
-    "version": "1.0",
-    "description": "Different APIs for the Divideite backend processes.",
-    "x-logo": {
-      "url": ""
-    },
-    "license": null,
-    "contact": null
-  },
-  "servers": [
-    {
-      "url": "https://api.example.io"
-    }
-  ],
-  "paths": {
-    "/dvp/onboard/check": {
-      "summary": "Check if a user name is available for a  a new User in onboarding process",
-      "description": "During signup, the user will provide a login user name. This has to be verified that its possible to pick that user id for registration. We will not allow multiple user names. The service can be used to check the user name as well as email address. ",
-      "get": {
-        "tags": [],
-        "parameters": [
-          {
-            "deprecated": false,
-            "example": "un=iamastudent",
-            "name": "un",
-            "description": "Add this parameter for checking the user name exists or not.",
-            "in": "query",
-            "required": false,
-            "allowEmptyValue": true,
-            "x-last-modified": 1602426437660
-          },
-          {
-            "deprecated": false,
-            "example": "em=myname@gmail.com",
-            "name": "em",
-            "description": "\tCheck if an email exists on the platform",
-            "in": "query",
-            "required": false,
-            "allowEmptyValue": false,
-            "x-last-modified": 1602426484683
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "required": [
-                    "v_type",
-                    " v_result"
-                  ],
-                  "enum": [],
-                  "type": "object",
-                  "properties": {
-                    "v_type": {
-                      "0": "E",
-                      "1": "M",
-                      "2": "A",
-                      "3": "I",
-                      "4": "L"
-                    },
-                    "v_result": {}
-                  },
-                  "example": {
-                    "v_type": "EMAIL",
-                    "v_result": true
-                  }
-                },
-                "example": {
-                  "v_type": "EMAIL",
-                  "v_result": true
-                },
-                "type": "object",
-                "format": "check_for",
-                "pattern": "",
-                "enum": [],
-                "required": [
-                  "v_type",
-                  " v_result"
-                ],
-                "properties": {
-                  "v_type": "EMAIL",
-                  "v_result": true
-                }
-              }
-            },
-            "description": "Successful verification of the email or user name. Other case the service is down. ",
-            "type": "",
-            "x-last-modified": 1602426771993
-          },
-          "401": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "required": [],
-                  "enum": [],
-                  "type": "object",
-                  "example": {
-                    "error": "Denied Access"
-                  }
-                },
-                "example": {
-                  "error": "Denied Access"
-                },
-                "type": "object",
-                "enum": [],
-                "required": [],
-                "properties": {}
-              }
-            },
-            "description": "",
-            "type": "",
-            "x-last-modified": 1602426842703
-          }
-        },
-        "operationId": "dvp_onboard_check",
-        "summary": "Check for already registered users"
-      },
-      "x-last-modified": 1602426230975
-    },
-    "/dvp/onboard/an_set": {
-      "summary": "Set an anonymous session for the signup process",
-      "description": "Request to start an anonymous session for the signup process. ",
-      "post": {
-        "tags": [],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "required": [],
-                  "enum": [],
-                  "type": "object",
-                  "properties": {
-                    "session": {}
-                  },
-                  "example": {
-                    "session": true
-                  }
-                },
-                "example": {
-                  "session": true
-                },
-                "type": "object",
-                "enum": [],
-                "required": [],
-                "properties": {
-                  "session": true
-                }
-              }
-            },
-            "description": "Successfully started a session",
-            "type": "",
-            "x-last-modified": 1602427149317
-          }
-        },
-        "operationId": "set_anonymous_session",
-        "summary": "Request for an anonymous session"
-      },
-      "x-last-modified": 1602426949698
-    },
-    "/dvp/onboard/new": {
-      "summary": "Create a new user in the platform",
-      "description": "Start the process for adding the new user in the platform. ",
-      "post": {
-        "tags": [],
-        "operationId": "add_new_user",
-        "summary": "Add a new user to the platform",
-        "description": "{\n    \"adr\": \"ssssss\",\n    \"bd\": \"443434343\",\n    \"em\": \"kris@gmail.com\",\n    \"fn\": \"Krish\",\n    \"lid\": \"kris\",\n    \"ln\": \"K\",\n    \"pwd\": \"abcd\"\n}",
-        "requestBody": {
-          "required": true,
-          "description": "Submit details needed for singup; ",
-          "content": {
-            "application/json": {
-              "encoding": "",
-              "schema": {
-                "example": {
-                  "adr": "ssssss",
-                  "bd": "443434343",
-                  "em": "kris@gmail.com",
-                  "fn": "Krish",
-                  "lid": "kris",
-                  "ln": "K",
-                  "pwd": "abcd"
-                },
-                "type": "object",
-                "enum": [],
-                "required": [],
-                "properties": {
-                  "adr": "ssssss",
-                  "bd": "443434343",
-                  "em": "kris@gmail.com",
-                  "fn": "Krish",
-                  "lid": "kris",
-                  "ln": "K",
-                  "pwd": "abcd"
-                }
-              },
-              "example": {
-                "adr": "ssssss",
-                "bd": "443434343",
-                "em": "kris@gmail.com",
-                "fn": "Krish",
-                "lid": "kris",
-                "ln": "K",
-                "pwd": "abcd"
-              },
-              "type": "object",
-              "enum": [],
-              "required": [],
-              "properties": {
-                "adr": "ssssss",
-                "bd": "443434343",
-                "em": "kris@gmail.com",
-                "fn": "Krish",
-                "lid": "kris",
-                "ln": "K",
-                "pwd": "abcd"
-              }
-            }
-          }
-        }
-      },
-      "x-last-modified": 1602427500463
-    },
-    "/dvp/signin/b": {
-      "summary": "Do a login process with credentials",
-      "description": "\tDo a login process with normal password authentication",
-      "post": {
-        "tags": [],
-        "operationId": "user_login",
-        "summary": "Login a new user",
-        "responses": {
-          "200": {
-            "type": "",
-            "description": "Successfull login",
-            "content": {
-              "application/json": {
-                "encoding": "",
-                "schema": {
-                  "example": {
-                    "llt": 77855454545,
-                    "nm": "Bob",
-                    "img": "http:// ....",
-                    "rol": "Expert"
-                  },
-                  "type": "object",
-                  "enum": [],
-                  "required": [],
-                  "properties": {
-                    "llt": 77855454545,
-                    "nm": "Bob",
-                    "img": "http:// ....",
-                    "rol": "Expert"
-                  }
-                },
-                "example": {
-                  "llt": 77855454545,
-                  "nm": "Bob",
-                  "img": "http:// ....",
-                  "rol": "Expert"
-                },
-                "type": "object",
-                "enum": [],
-                "required": [],
-                "properties": {
-                  "llt": 77855454545,
-                  "nm": "Bob",
-                  "img": "http:// ....",
-                  "rol": "Expert"
-                }
-              }
-            },
-            "x-last-modified": 1602427884525
-          },
-          "401": {
-            "type": "",
-            "description": "not authenticated",
-            "content": {
-              "application/json": {
-                "encoding": "",
-                "schema": {
-                  "example": {
-                    "error": "Invalid Username or Password"
-                  },
-                  "type": "object",
-                  "enum": [],
-                  "required": [],
-                  "properties": {
-                    "error": "Invalid Username or Password"
-                  }
-                },
-                "example": {
-                  "error": "Invalid Username or Password"
-                },
-                "type": "object",
-                "enum": [],
-                "required": [],
-                "properties": {
-                  "error": "Invalid Username or Password"
-                }
-              }
-            },
-            "x-last-modified": 1602427935010
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "description": "Login parameters",
-          "content": {
-            "application/json": {
-              "encoding": "",
-              "schema": {
-                "example": {
-                  "un": "bobmarley",
-                  "ln_sec": "password_hash"
-                },
-                "type": "object",
-                "enum": [],
-                "required": [],
-                "properties": {
-                  "un": "bobmarley",
-                  "ln_sec": "password_hash"
-                }
-              },
-              "example": {
-                "un": "bobmarley",
-                "ln_sec": "password_hash"
-              },
-              "type": "object",
-              "enum": [],
-              "required": [],
-              "properties": {
-                "un": "bobmarley",
-                "ln_sec": "password_hash"
-              }
-            }
-          }
-        }
-      },
-      "x-last-modified": 1602427736134
-    },
-    "/dxp/summary": {
-      "summary": "Get a list of concepts to be displayed for expert dashboard",
-      "description": "Get a summary of available concepts , parts etc.",
-      "get": {
-        "tags": [],
-        "operationId": "get_expert_summary",
-        "responses": {
-          "200": {
-            "type": "",
-            "description": "",
-            "content": {
-              "application/json": {
-                "encoding": "",
-                "schema": {
-                  "example": {
-                    "ns": {
-                      "sub": 3,
-                      "part": 15,
-                      "b_c": 10,
-                      "i_c": 20
-                    }
-                  },
-                  "type": "object",
-                  "enum": [],
-                  "required": [],
-                  "properties": {
-                    "ns": {
-                      "sub": 3,
-                      "part": 15,
-                      "b_c": 10,
-                      "i_c": 20
-                    }
-                  }
-                },
-                "example": {
-                  "ns": {
-                    "sub": 3,
-                    "part": 15,
-                    "b_c": 10,
-                    "i_c": 20
-                  }
-                },
-                "type": "object",
-                "enum": [],
-                "required": [],
-                "properties": {
-                  "ns": {
-                    "sub": 3,
-                    "part": 15,
-                    "b_c": 10,
-                    "i_c": 20
-                  }
-                }
-              }
-            },
-            "x-last-modified": 1602428325098
-          }
-        }
-      },
-      "x-last-modified": 1602428149114
-    },
-    "/dxp/concept/recent": {
-      "description": "Get the list of concepts to show in dashboard",
-      "get": {
-        "tags": [],
-        "operationId": "get_recent_concepts",
-        "summary": "Get a list of concepts defined by the expert. max of 10",
-        "responses": {
-          "200": {
-            "type": "",
-            "description": "List of concepts to be shown",
-            "content": {
-              "application/json": {
-                "encoding": "",
-                "schema": {
-                  "example": [
-                    {
-                      "name": "Sample Concept",
-                      "id": "BC_76679899",
-                      "created_on": 167654665464,
-                      "modified_on": 1365646564,
-                      "total_available": 5,
-                      "impls": [
-                        {
-                          "ic_name": "impl_1",
-                          "id_id": "IC_76679899_1"
-                        },
-                        {}
-                      ]
-                    },
-                    {
-                      "name": "Sample Concept 2",
-                      "id": "BC_76679898",
-                      "created_on": 167654665464,
-                      "modified_on": 1365646564,
-                      "total_available": 8,
-                      "impls": [
-                        {
-                          "ic_name": "impl_1",
-                          "id_id": "IC_76679898_1"
-                        },
-                        {}
-                      ]
-                    }
-                  ],
-                  "type": "object",
-                  "enum": [],
-                  "required": [],
-                  "properties": [
-                    {
-                      "name": "Sample Concept",
-                      "id": "BC_76679899",
-                      "created_on": 167654665464,
-                      "modified_on": 1365646564,
-                      "total_available": 5,
-                      "impls": [
-                        {
-                          "ic_name": "impl_1",
-                          "id_id": "IC_76679899_1"
-                        },
-                        {}
-                      ]
-                    },
-                    {
-                      "name": "Sample Concept 2",
-                      "id": "BC_76679898",
-                      "created_on": 167654665464,
-                      "modified_on": 1365646564,
-                      "total_available": 8,
-                      "impls": [
-                        {
-                          "ic_name": "impl_1",
-                          "id_id": "IC_76679898_1"
-                        },
-                        {}
-                      ]
-                    }
-                  ]
-                },
-                "example": [
-                  {
-                    "name": "Sample Concept",
-                    "id": "BC_76679899",
-                    "created_on": 167654665464,
-                    "modified_on": 1365646564,
-                    "total_available": 5,
-                    "impls": [
-                      {
-                        "ic_name": "impl_1",
-                        "id_id": "IC_76679899_1"
-                      },
-                      {}
-                    ]
-                  },
-                  {
-                    "name": "Sample Concept 2",
-                    "id": "BC_76679898",
-                    "created_on": 167654665464,
-                    "modified_on": 1365646564,
-                    "total_available": 8,
-                    "impls": [
-                      {
-                        "ic_name": "impl_1",
-                        "id_id": "IC_76679898_1"
-                      },
-                      {}
-                    ]
-                  }
-                ],
-                "type": "object",
-                "enum": [],
-                "required": [],
-                "properties": [
-                  {
-                    "name": "Sample Concept",
-                    "id": "BC_76679899",
-                    "created_on": 167654665464,
-                    "modified_on": 1365646564,
-                    "total_available": 5,
-                    "impls": [
-                      {
-                        "ic_name": "impl_1",
-                        "id_id": "IC_76679899_1"
-                      },
-                      {}
-                    ]
-                  },
-                  {
-                    "name": "Sample Concept 2",
-                    "id": "BC_76679898",
-                    "created_on": 167654665464,
-                    "modified_on": 1365646564,
-                    "total_available": 8,
-                    "impls": [
-                      {
-                        "ic_name": "impl_1",
-                        "id_id": "IC_76679898_1"
-                      },
-                      {}
-                    ]
-                  }
-                ]
-              }
-            },
-            "x-last-modified": 1602428894001
-          }
-        }
-      },
-      "x-last-modified": 1602428477498
-    }
-  },
-  "components": {
-    "securitySchemes": {
-      "JWTAuth": {
-        "scheme": "bearer",
-        "bearerFormat": "JWT",
-        "type": "http",
-        "description": "Example: \n> Authorization: Bearer <token>",
-        "name": "JWT",
-        "in": "header",
-        "x-last-modified": 1602426052166
-      }
-    },
-    "schemas": {},
-    "responses": {},
-    "parameters": {}
-  },
-  "tags": [],
-  "security": [],
-  "externalDocs": null
-}
+---
+openapi: "3.0.1"
+info:
+  title: "Divideite"
+  description: "Divideite API "
+  contact:
+    url: "/dvp/"
+  version: "1.0.1"
+servers:
+- url: "/dvp/"
+paths:
+  /ringthebell:
+    description: "Attempt a login with this end point"
+    post:
+      tags:
+      - ""
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: "request_body"
+              type: "object"
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "custom_model"
+                description: ""
+                $ref: "#/components/schemas/LoginResponse"
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "custom_model"
+                description: ""
+                $ref: "#/components/schemas/InvalidLogin"
+  /onboard/gatepass:
+    description: "Get a temporary session for using signup "
+    get:
+      tags:
+      - ""
+      parameters: []
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "string"
+                description: ""
+        401:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "string"
+                description: ""
+  /onboard/entry/{user_id}/:
+    description: "Create a new user in divideite platform"
+    post:
+      tags:
+      - ""
+      parameters:
+      - name: "user_id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+          example: "bobdylan01"
+        example: "bobdylan01"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: "request_body"
+              type: "object"
+              $ref: "#/components/schemas/SignupRequest"
+      responses:
+        200:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "object"
+                description: ""
+                $ref: "#/components/schemas/LoginResponse"
+        403:
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: "string"
+                description: ""
+components:
+  schemas:
+    LoginResponse:
+      type: "object"
+      properties:
+        door_status:
+          title: "door_status"
+          type: "string"
+          description: "Door opened?"
+          example: ""
+      description: ""
+    LoginRequest:
+      type: "object"
+      properties:
+        uid:
+          title: "uid"
+          type: "string"
+          description: ""
+          example: "bobdylan01"
+        pw:
+          title: "pw"
+          type: "string"
+          description: ""
+          example: "my_password"
+        extend:
+          title: "extend"
+          type: "boolean"
+          description: ""
+          example: true
+      description: ""
+    InvalidLogin:
+      type: "object"
+      properties:
+        error:
+          title: "error"
+          type: "string"
+          description: ""
+          example: ""
+      description: ""
+    SignupRequest:
+      type: "object"
+      properties:
+        fn:
+          title: "fn"
+          type: "string"
+          description: "First name of the user"
+          example: "Bob"
+        ln:
+          title: "ln"
+          type: "string"
+          description: ""
+          example: "Dylan"
+        uid:
+          title: "uid"
+          type: "string"
+          description: ""
+          example: "bobdylan01"
+        em:
+          title: "em"
+          type: "string"
+          description: ""
+          example: "bob@gmail.com"
+        dob:
+          title: "dob"
+          type: "string"
+          description: ""
+          example: "03/04/1986"
+        pw:
+          title: "pw"
+          type: "string"
+          description: ""
+          example: "my_password"
+        addr:
+          title: "addr"
+          type: "string"
+          description: ""
+          example: "Avenue Road, NJ"
+        mob:
+          title: "mob"
+          type: "string"
+          description: ""
+          example: "+177789225547"
+      description: ""
+  extensions:
+    x-apitive-documentation:
+    - id: 712
+      title: "Divideite"
+      url: ""
+      content: "Divideite API "
+      visibility: true
+      type: "General"
